@@ -3,19 +3,19 @@
 ## Pantallazos de Requests en Postman
 
 ### Query 1: Continente con países (anidada)
-![x](./Screenshots/q1.png)
+![x](./screenshots/q1.png)
 
 ### Query 2: País filtrado por código
-![x](./Screenshots/q2.png)
+![x](./screenshots/q2.png)
 
 ### Query 3: Todos los continentes con países
-![x](./Screenshots/q3.png)
+![x](./screenshots/q3.png)
 
 ### Query 4: Idiomas con países
-![x](./Screenshots/q4.png)
+![x](./screenshots/q4.png)
 
 ### Query 5: Países con idiomas
-![x](./Screenshots/q5.png)
+![x](./screenshots/q5.png)
 
 ---
 
