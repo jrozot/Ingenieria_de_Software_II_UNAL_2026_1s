@@ -1,88 +1,66 @@
-# Principios SOLID
+# Principios SOLID del Diseño Orientado a Objetos
 
-El video una guía completa sobre los cinco principios SOLID, los cuales son recomendaciones diseñadas para hacer el código más legible, limpio, mantenible y escalable. Estos principios permiten a los desarrolladores modificar el código sin "demasiado trauma" y demuestra su aplicación tanto en Angular como en React, evidenciando que no están limitados a la programación orientada a objetos.
-
----
+El acrónimo SOLID, propuesto por Robert C. Martin, representa cinco principios básicos que ayudan a evitar malos diseños y a lograr alta cohesión y bajo acoplamiento.
 
 ## 1. Principio de Responsabilidad Única (SRP)
+"Una clase debe tener una sola razón para cambiar."
 
-**Definición:** Cada módulo, clase o función debe tener una única razón para cambiar.
+- **Idea:** Una clase debe encargarse de una sola función del software.  
+  Si una clase maneja lógica de negocio, base de datos y formato de interfaz al mismo tiempo (por ejemplo, una clase Invoice que calcula totales y también guarda datos), está violando este principio.
 
-**Ejemplos:**
-Un componente no debería encargarse simultáneamente de realizar peticiones HTTP, filtrar datos y manejar la interfaz de usuario. En su lugar, estas tareas deben separarse en servicios o hooks independientes.
-
-**Cómo detectar una violación:**
-
-* Si necesitas modificar un componente de UI para cambiar lógica de negocio.
-* Si una clase maneja múltiples responsabilidades no relacionadas (por ejemplo, enviar correos y conectarse a una base de datos).
-* Si necesitas múltiples mocks para probar una sola función.
+- **Beneficios:**  
+  Reduce conflictos al trabajar en equipo y evita que un cambio en una parte (como la base de datos) rompa otra (como las reglas de negocio).
 
 ---
 
 ## 2. Principio Abierto/Cerrado (OCP)
+"Un módulo debe estar abierto a extensión, pero cerrado a modificación."
 
-**Definición:** El software debe estar abierto a extensión, pero cerrado a modificación.
+- **Idea:** Se debe poder cambiar el comportamiento de un módulo sin modificar su código fuente.  
+  Esto se logra usando abstracciones.
 
-El nuevo comportamiento debe añadirse sin modificar el código existente que ya funciona.
-
-**Ejemplo:**
-En lugar de usar múltiples estructuras `if/else` o `switch` para manejar diferentes tipos de notificaciones (correo, SMS, etc.), se debe usar un objeto manejador o configuración que permita agregar nuevos tipos sin cambiar la lógica principal.
-
-**Cómo detectar una violación:**
-
-* Si cada nuevo requerimiento obliga a modificar lógica condicional existente.
+- **Cómo implementarlo:**
+  - **Polimorfismo dinámico:** Usar interfaces o clases abstractas.  
+    Ejemplo: una función LogOn debe depender de una interfaz Modem, no de implementaciones específicas.
+  - **Polimorfismo estático:** Usar genéricos o plantillas para extender sin modificar el código.
 
 ---
 
 ## 3. Principio de Sustitución de Liskov (LSP)
+"Las subclases deben poder reemplazar a sus clases base."
 
-**Definición:** Las subclases o implementaciones deben poder sustituir a sus clases base o interfaces sin romper el comportamiento de la aplicación.
+- **Idea:** Una clase hija debe comportarse correctamente cuando se usa en lugar de la clase padre.
 
-**Ejemplo:**
-Si un servicio espera que un método retorne un "observable", una versión mock no debería devolver un arreglo simple, ya que rompe el contrato establecido y genera errores. En React, este contrato suele mantenerse mediante validación de props.
+- **Ejemplo (Círculo y Elipse):**  
+  Si un Círculo hereda de Elipse, puede romper este principio.  
+  Una Elipse puede tener dos focos, pero un Círculo solo uno. Esto puede causar errores si el código espera el comportamiento normal de una Elipse.
 
-**Cómo detectar una violación:**
-
-* Errores de tipo.
-* Excepciones por implementaciones incompletas.
-* Comportamientos incorrectos al reemplazar una clase por otra (por ejemplo, un mock por un servicio real).
+- **Impacto:**  
+  Cuando se viola este principio, se termina usando condiciones como `if` o `switch`, lo que rompe otros principios como OCP.
 
 ---
 
 ## 4. Principio de Segregación de Interfaces (ISP)
+"Los clientes no deben depender de interfaces que no usan."
 
-**Definición:** El código no debe depender de interfaces que no utiliza.
+- **Idea:** Las interfaces grandes (con muchos métodos) deben dividirse en interfaces más pequeñas y específicas.
 
-Es mejor tener varias interfaces pequeñas y específicas que una sola interfaz grande y sobrecargada.
-
-**Ejemplo:**
-En lugar de un componente `UserCard` masivo que recibe todas las propiedades y acciones posibles del usuario (aunque no las use), se debería dividir en componentes más pequeños como `UserInfo` y `UserActions`, cada uno con datos específicos.
-
-**Cómo detectar una violación:**
-
-* Interfaces muy grandes con muchas propiedades opcionales.
-* Componentes con props sin usar.
-* Funciones que reciben objetos de los cuales solo utilizan unas pocas propiedades.
+- **Ejemplo:**  
+  Si una clase TimedDoor necesita comportarse como puerta y como temporizador, no se debe agregar todo al mismo interfaz.  
+  En su lugar, se crean interfaces separadas y la clase implementa ambas o usa un adaptador.
 
 ---
 
 ## 5. Principio de Inversión de Dependencias (DIP)
+"Depende de abstracciones, no de implementaciones."
 
-**Definición:** El código debe depender de abstracciones (interfaces), no de implementaciones concretas.
+- **Idea:**  
+  Los módulos importantes no deben depender de detalles.  
+  Ambos deben depender de abstracciones.
 
-**Ejemplo:**
-En lugar de que un servicio instancie directamente un `EmailClient` usando `new`, debería recibir una interfaz genérica como `Notifier` a través de su constructor. Esto permite cambiar fácilmente la implementación (por ejemplo, usar un mock o otro servicio) sin modificar el código dependiente.
+- **Cómo funciona:**  
+  En lugar de que un módulo principal dependa directamente de uno secundario, ambos dependen de una interfaz.
 
-**Cómo detectar una violación:**
-
-* Instanciaciones directas dentro de clases (`new X`).
-* Creación manual de dependencias en lugar de inyección.
-* Necesidad de reconfigurar módulos completos solo para ejecutar pruebas.
-
----
-
-## Código Legacy
-
-En el mundo real, los desarrolladores frecuentemente trabajan con código legacy que no sigue estos principios.
-
-Recomienda aplicar la **"regla del scout"**: siempre dejar el código un poco mejor de como se encontró. Aunque no siempre es posible refactorizar un sistema completo debido a limitaciones de tiempo y presupuesto, se debe priorizar la entrega de valor mientras se implementan estos principios de forma incremental cuando sea posible.
+- **Ejemplo:**  
+  Un botón no debe depender directamente de una lámpara.  
+  En su lugar, el botón depende de una interfaz (ButtonClient), que la lámpara implementa.
