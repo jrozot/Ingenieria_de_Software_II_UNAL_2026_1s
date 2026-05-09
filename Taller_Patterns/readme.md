@@ -38,6 +38,7 @@ if __name__ == "__main__":
 ![x](screenshots/singleton.png)
 
 - **¿Qué hace este ejemplo?**
+
 La clase `Configuración` solo puede tener una instancia.
 `__new__` controla la creación del objeto.
 Si ya existe una instancia devuelve la misma.
@@ -119,12 +120,47 @@ if __name__ == "__main__":
 ![x](screenshots/factory.png)
 
 - **¿Qué hace este ejemplo?**
+
 `Transporte` define la interfaz común.
 `Camion y Barco` son productos concretos.
 `Logistica` define el método fábrica crear_transporte().
 Las clases concretas deciden qué objeto crear.
 El cliente no necesita conocer las clases concretas directamente.
 - **Ventajas del patrón Factory Method**
+
 Reduce acoplamiento.
 Facilita agregar nuevos tipos de productos.
 Hace el código más flexible y mantenible.
+
+## Creacional + Estructural (Factory Method + Adapter)
+
+```python
+# =========================
+# PATRÓN ESTRUCTURAL: ADAPTER
+# =========================
+
+# Servicio externo con interfaz incompatible
+class ServicioEnvioExterno:
+
+    def enviar_paquete(self):
+        return "Entrega realizada por servicio externo"
+
+
+# Adapter para que funcione con nuestra interfaz Transporte
+class EnvioAdapter(Transporte):
+
+    def __init__(self, servicio_externo):
+        self.servicio_externo = servicio_externo
+
+    def entregar(self):
+        # Llama al método del servicio externo
+        return self.servicio_externo.enviar_paquete()
+```
+
+- **Resultado:**
+![x](screenshots/adapterfactory.png)
+
+- **¿Qué hace este ejemplo?**
+1. Factory Method: Permite crear distintos tipos de transporte sin acoplar el cliente a clases concretas.
+2. Adapter: Permite usar un servicio externo con una interfaz diferente sin modificar nuestro sistema.
+
